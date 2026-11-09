@@ -93,7 +93,7 @@ CP3-BugBox/
 
 ### Como executar
 
-1. Crie um projeto no [Firebase Console](https://console.firebase.google.com/):
+1. O app já está ligado ao projeto Firebase `bugbox-2612a` (configuração em `src/firebase.ts`). Para usar outro projeto, crie um no [Firebase Console](https://console.firebase.google.com/):
    - **Authentication** → ative o provedor **E-mail/senha**
    - **Firestore Database** → crie o banco
    - **Firestore → Regras** → cole o conteúdo de `firestore.rules` e publique

@@ -11,12 +11,12 @@ import { getFirestore } from "firebase/firestore";
 // Configuração do app Web cadastrado no Firebase Console
 // (Configurações do projeto → Seus apps → Web).
 const firebaseConfig = {
-  apiKey: "COLE_AQUI",
-  authDomain: "COLE_AQUI",
-  projectId: "COLE_AQUI",
-  storageBucket: "COLE_AQUI",
-  messagingSenderId: "COLE_AQUI",
-  appId: "COLE_AQUI",
+  apiKey: "AIzaSyBCDFC2U-IpAZv7iWvXn_MRzcUGN7cneVM",
+  authDomain: "bugbox-2612a.firebaseapp.com",
+  projectId: "bugbox-2612a",
+  storageBucket: "bugbox-2612a.firebasestorage.app",
+  messagingSenderId: "96381352256",
+  appId: "1:96381352256:web:6af31046400baa4ef1a2a5",
 };
 
 // Reaproveita o app se ele já foi criado (acontece no recarregamento do Expo).
