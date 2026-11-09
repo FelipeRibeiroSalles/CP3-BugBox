@@ -264,7 +264,13 @@ export default function BugListScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.background },
+  safe: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 720,
+    alignSelf: "center",
+    backgroundColor: colors.background,
+  },
   header: { paddingHorizontal: 20, paddingTop: 16, gap: 4 },
   greeting: { color: colors.text, fontSize: 22, fontWeight: "700" },
   summary: { color: colors.muted, fontSize: 14 },
