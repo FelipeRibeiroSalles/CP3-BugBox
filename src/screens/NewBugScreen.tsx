@@ -140,7 +140,13 @@ export default function NewBugScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: colors.background },
-  container: { padding: 20, gap: 8 },
+  container: {
+    width: "100%",
+    maxWidth: 600,
+    alignSelf: "center",
+    padding: 20,
+    gap: 8,
+  },
   label: { color: colors.text, fontSize: 15, fontWeight: "600", marginTop: 8 },
   input: {
     backgroundColor: colors.card,
