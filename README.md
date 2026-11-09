@@ -79,6 +79,7 @@ CP3-BugBox/
 └── src/
     ├── firebase.ts             # inicializa Firebase, Auth (com persistência) e Firestore
     ├── theme.ts                # cores e severidades
+    ├── dialog.ts               # mensagens e confirmações (Alert no celular, alert/confirm no navegador)
     ├── context/UserContext.ts  # compartilha o usuário logado com as telas
     ├── navigation/types.ts     # tipos das rotas
     ├── services/
@@ -103,10 +104,12 @@ CP3-BugBox/
 
 ```bash
 npm install
-npx expo start
+npx expo install react-dom react-native-web
 ```
 
-4. Escaneie o QR Code com o **Expo Go**.
+4. Escolha onde abrir:
+   - **No navegador:** `npx expo start --web` (abre o app no Chrome, sem precisar de celular)
+   - **No celular:** `npx expo start` e escaneie o QR Code com o **Expo Go** (no iPhone, entre com a mesma conta Expo no computador, via `npx expo login`, e no Expo Go)
 
 ---
 
@@ -127,7 +130,7 @@ O Authentication cuida de **quem é o usuário**. As funções ficam em `src/ser
 No cadastro, além de criar a conta, o app grava o perfil em `users/{uid}` no Firestore com `setDoc`. A senha vai apenas para o Firebase Authentication; o app não grava senha no banco.
 
 ### 3.2 Sessão persistida (restore da sessão)
-Em `src/firebase.ts`, o Auth é inicializado com `initializeAuth` e `getReactNativePersistence(AsyncStorage)`. A sessão fica salva no aparelho e é restaurada quando o app abre de novo, sem novo login. Se o Auth já estiver inicializado (acontece quando o Expo recarrega), o código trata o erro `auth/already-initialized` e reaproveita a instância com `getAuth`.
+Em `src/firebase.ts`, no celular o Auth é inicializado com `initializeAuth` e `getReactNativePersistence(AsyncStorage)`; no navegador (`Platform.OS === "web"`) usa `getAuth`, que guarda a sessão no armazenamento do próprio browser. A sessão fica salva no aparelho e é restaurada quando o app abre de novo, sem novo login. Se o Auth já estiver inicializado (acontece quando o Expo recarrega), o código trata o erro `auth/already-initialized` e reaproveita a instância com `getAuth`.
 
 ### 3.3 Navegação condicional
 O `App.tsx` escuta a sessão:
@@ -209,6 +212,8 @@ As chamadas ao Firebase usam `async/await` com `try/catch/finally`:
 - `try`: executa a operação;
 - `catch`: mostra um `Alert` com a mensagem de `errorMessage()`, que traduz os códigos do Firebase (`auth/invalid-credential`, `auth/email-already-in-use`, `permission-denied` etc.);
 - `finally`: desliga o carregamento, mesmo se der erro.
+
+As mensagens passam por `src/dialog.ts`: no celular usam o `Alert` nativo; no navegador, onde o `Alert` do React Native não aparece, usam `window.alert` e `window.confirm`. A escolha é feita com `Platform.OS`.
 
 ### 3.10 TypeScript
 - Tipos de união: `Severity = "baixa" | "media" | "alta" | "critica"` e `BugStatus = "aberto" | "resolvido"`.

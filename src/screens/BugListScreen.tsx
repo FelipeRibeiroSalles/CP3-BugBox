@@ -3,7 +3,6 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Pressable,
   StyleSheet,
@@ -13,6 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useUser } from "../context/UserContext";
+import { confirmAction, showMessage } from "../dialog";
 import type { RootStackParamList } from "../navigation/types";
 import { errorMessage, listenProfileName, logout } from "../services/auth";
 import {
@@ -95,45 +95,36 @@ export default function BugListScreen({ navigation }: Props) {
   );
 
   function confirmLogout() {
-    Alert.alert("Sair", "Deseja sair da sua conta?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Sair",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await logout();
-          } catch (error) {
-            Alert.alert("Não foi possível sair", errorMessage(error));
-          }
-        },
-      },
-    ]);
+    confirmAction("Sair", "Deseja sair da sua conta?", "Sair", async () => {
+      try {
+        await logout();
+      } catch (error) {
+        showMessage("Não foi possível sair", errorMessage(error));
+      }
+    });
   }
 
   async function handleToggle(bug: Bug) {
     try {
       await toggleBugStatus(user.uid, bug);
     } catch (error) {
-      Alert.alert("Não foi possível atualizar", errorMessage(error));
+      showMessage("Não foi possível atualizar", errorMessage(error));
     }
   }
 
   function confirmDelete(bug: Bug) {
-    Alert.alert("Excluir bug", `Excluir "${bug.title}"? Isso não pode ser desfeito.`, [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Excluir",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await removeBug(user.uid, bug.id);
-          } catch (error) {
-            Alert.alert("Não foi possível excluir", errorMessage(error));
-          }
-        },
-      },
-    ]);
+    confirmAction(
+      "Excluir bug",
+      `Excluir "${bug.title}"? Isso não pode ser desfeito.`,
+      "Excluir",
+      async () => {
+        try {
+          await removeBug(user.uid, bug.id);
+        } catch (error) {
+          showMessage("Não foi possível excluir", errorMessage(error));
+        }
+      }
+    );
   }
 
   function renderBug({ item }: { item: Bug }) {

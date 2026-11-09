@@ -7,6 +7,7 @@ import {
   type Auth,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { Platform } from "react-native";
 
 // Configuração do app Web cadastrado no Firebase Console
 // (Configurações do projeto → Seus apps → Web).
@@ -22,9 +23,14 @@ const firebaseConfig = {
 // Reaproveita o app se ele já foi criado (acontece no recarregamento do Expo).
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-// O Auth guarda a sessão no AsyncStorage: quem fez login continua logado
-// quando fecha e abre o app de novo.
+// O Auth guarda a sessão: quem fez login continua logado quando fecha e abre
+// o app de novo. No celular a sessão vai para o AsyncStorage; no navegador o
+// próprio Firebase usa o armazenamento do browser (IndexedDB).
 function createAuth(): Auth {
+  if (Platform.OS === "web") {
+    return getAuth(app);
+  }
+
   try {
     return initializeAuth(app, {
       persistence: getReactNativePersistence(AsyncStorage),

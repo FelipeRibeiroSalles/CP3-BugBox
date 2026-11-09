@@ -2,7 +2,6 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -14,6 +13,7 @@ import {
 } from "react-native";
 
 import { useUser } from "../context/UserContext";
+import { showMessage } from "../dialog";
 import type { RootStackParamList } from "../navigation/types";
 import { errorMessage } from "../services/auth";
 import { addBug, type Severity } from "../services/bugs";
@@ -40,7 +40,7 @@ export default function NewBugScreen({ navigation }: Props) {
     if (savingRef.current) return;
 
     if (title.trim().length < 3) {
-      Alert.alert("Falta o título", "Descreva o bug em pelo menos 3 letras.");
+      showMessage("Falta o título", "Descreva o bug em pelo menos 3 letras.");
       return;
     }
 
@@ -50,7 +50,7 @@ export default function NewBugScreen({ navigation }: Props) {
       await addBug(user.uid, { title, description, severity });
       navigation.goBack();
     } catch (error) {
-      Alert.alert("Não foi possível salvar", errorMessage(error));
+      showMessage("Não foi possível salvar", errorMessage(error));
     } finally {
       savingRef.current = false;
       setSaving(false);

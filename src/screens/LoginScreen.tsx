@@ -2,7 +2,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState, type ReactNode } from "react";
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -15,6 +14,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { showMessage } from "../dialog";
 import { errorMessage, login, register, resetPassword } from "../services/auth";
 import { colors } from "../theme";
 
@@ -55,7 +55,7 @@ export default function LoginScreen() {
 
     const problem = validate();
     if (problem) {
-      Alert.alert("Confira os dados", problem);
+      showMessage("Confira os dados", problem);
       return;
     }
 
@@ -68,7 +68,7 @@ export default function LoginScreen() {
       }
       // Sucesso: o onAuthStateChanged do App.tsx troca para a lista de bugs.
     } catch (error) {
-      Alert.alert(
+      showMessage(
         isRegister ? "Não foi possível cadastrar" : "Não foi possível entrar",
         errorMessage(error)
       );
@@ -79,7 +79,7 @@ export default function LoginScreen() {
 
   async function handleResetPassword() {
     if (!EMAIL_REGEX.test(email.trim())) {
-      Alert.alert(
+      showMessage(
         "Recuperar senha",
         "Digite seu e-mail no campo acima e toque aqui de novo."
       );
@@ -88,12 +88,12 @@ export default function LoginScreen() {
 
     try {
       await resetPassword(email);
-      Alert.alert(
+      showMessage(
         "Recuperar senha",
         "Se existir uma conta com esse e-mail, você vai receber um link para criar uma nova senha."
       );
     } catch (error) {
-      Alert.alert("Recuperar senha", errorMessage(error));
+      showMessage("Recuperar senha", errorMessage(error));
     }
   }
 
